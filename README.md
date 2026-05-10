@@ -166,8 +166,3 @@ Do not commit these folders unless you intentionally want to publish local runti
 - First run per OS requires internet.
 - The launcher uses local loopback Gateway access for local Chat and Dashboard.
 - API keys, bot tokens, sessions, and generated state belong in ignored `data/` folders.
-- If you expose a bot token or API key in a video, regenerate it before publishing.
-
-## License
-
-MIT
