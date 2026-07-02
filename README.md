@@ -1,4 +1,20 @@
-# OpenClaw USB Portable ⚡
+# OpenClaw USB Portable (二次创作/非原创版本) ⚡
+
+> [!IMPORTANT]
+> **声明**：本仓库是基于原作者 [techjarves/OpenClaw-USB-Portable](https://github.com/techjarves/OpenClaw-USB-Portable) 的开源项目进行的**二次创作**，并非原创。本版本进行了一些定制修改和功能优化，版权归原作者所有。
+
+---
+
+## 📢 最新更新与修正日志 (Update & Bugfix Logs)
+
+### **v1.1.0-custom (2026-07-01)**
+*   **更新功能 (New Features)**:
+    *   **GitHub 自动更新提示**：在 Windows (`run.bat` -> `bin/windows.ps1`) 和 Linux/macOS (`run.sh` -> `bin/unix.sh`) 启动时，新增了交互式提示，用户可选择是否联网检查并更新 OpenClaw 核心程序到官方 GitHub 最新开发版。
+    *   **工具菜单更新选项优化**：在工具菜单（Tools Menu）的选项 `7. Update` 中，已将原本更新至 npm 官方稳定版的命令修改为更新至 [OpenClaw 官方 GitHub 最新开发版本](https://github.com/openclaw/openclaw)。
+*   **修正的 Bug (Bugfixes)**:
+    *   解决了原本直接更新到 npm 稳定版而无法直接获取 GitHub 仓库最新特性的限制。
+
+---
 
 Run OpenClaw from a portable workspace on Windows, Linux, and macOS.
 

@@ -563,7 +563,11 @@ function Show-ToolsMenu {
       "4" { Invoke-OpenClaw @("sessions"); Pause-Menu }
       "5" { Invoke-OpenClaw @("channels", "status"); Pause-Menu }
       "6" { Show-GatewayLogTail; Pause-Menu }
-      "7" { & $NpmCmd install --prefix $OpenClawPackageRoot openclaw@latest --ignore-scripts --loglevel=info --progress=false; Pause-Menu }
+      "7" {
+        Write-Step "正在联网更新 OpenClaw 到 GitHub 最新版本..."
+        & $NpmCmd install --prefix $OpenClawPackageRoot git+https://github.com/openclaw/openclaw.git --ignore-scripts --loglevel=info --progress=false
+        Pause-Menu
+      }
       "8" { Open-PortableShell }
       "9" { Stop-Gateway; Pause-Menu }
       "10" { Invoke-OpenClawCommandPrompt; Pause-Menu }
@@ -576,6 +580,19 @@ function Show-ToolsMenu {
 Install-NodeIfNeeded
 . (Join-Path $PSScriptRoot "portable-env.ps1") -Root $Root -Platform $Platform
 Install-OpenClawIfNeeded
+
+# Prompt to update to GitHub version
+Write-Host ""
+$choice = Read-Host "[portable-openclaw] 是否联网检查并更新 OpenClaw 核心程序到 GitHub 最新开发版？[Y/N] (默认: N)"
+if ($choice -eq 'y' -or $choice -eq 'Y') {
+  Write-Step "正在联网更新 OpenClaw 到 GitHub 最新版本..."
+  Invoke-PortableProcess `
+    -FilePath $NpmCmd `
+    -Arguments @("install", "--prefix", $OpenClawPackageRoot, "git+https://github.com/openclaw/openclaw.git", "--ignore-scripts", "--loglevel=info", "--progress=false") `
+    -StdoutLog (Join-Path $Root "logs\npm-update-$Platform.out.log") `
+    -StderrLog (Join-Path $Root "logs\npm-update-$Platform.err.log") `
+    -Label "Updating OpenClaw from GitHub"
+}
 
 Write-Step "Portable runtime ready"
 & $NodeExe --version

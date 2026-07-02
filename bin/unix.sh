@@ -421,7 +421,11 @@ tools_menu() {
       4) openclaw sessions; pause_menu ;;
       5) openclaw channels status; pause_menu ;;
       6) if [ -f "$GATEWAY_LOG" ]; then tail -n 80 -f "$GATEWAY_LOG"; else echo "No Gateway log yet."; pause_menu; fi ;;
-      7) "$NPM_BIN" install --prefix "$OPENCLAW_PACKAGE_ROOT" openclaw@latest --ignore-scripts --loglevel=info --progress=false; pause_menu ;;
+      7)
+        log "正在联网更新 OpenClaw 到 GitHub 最新版本..."
+        "$NPM_BIN" install --prefix "$OPENCLAW_PACKAGE_ROOT" git+https://github.com/openclaw/openclaw.git --ignore-scripts --loglevel=info --progress=false
+        pause_menu
+        ;;
       8) portable_shell ;;
       9) stop_gateway; pause_menu ;;
       10) run_openclaw_command; pause_menu ;;
@@ -435,6 +439,25 @@ install_node_if_needed
 PORTABLE_ENV_ROOT=$ROOT PORTABLE_ENV_PLATFORM=$PLATFORM . "$SCRIPT_DIR/portable-env.sh"
 patch_config_with_node
 install_openclaw_if_needed
+
+# Prompt to update to GitHub version
+echo ""
+printf '[portable-openclaw] 是否联网检查并更新 OpenClaw 核心程序到 GitHub 最新开发版？[y/n] (默认: n): '
+read -r choice || choice="n"
+case "$choice" in 
+  [yY][eE][sS]|[yY])
+    log "正在联网更新 OpenClaw 到 GitHub 最新版本..."
+    out_log="$ROOT/logs/npm-update-$PLATFORM.out.log"
+    err_log="$ROOT/logs/npm-update-$PLATFORM.err.log"
+    : > "$out_log"
+    : > "$err_log"
+    "$NPM_BIN" install --prefix "$OPENCLAW_PACKAGE_ROOT" git+https://github.com/openclaw/openclaw.git --ignore-scripts --loglevel=info --progress=false > "$out_log" 2> "$err_log" || {
+      echo "更新失败，请检查网络。"
+    }
+    ;;
+  *)
+    ;;
+esac
 
 log "Portable runtime ready"
 "$NODE_BIN" --version
